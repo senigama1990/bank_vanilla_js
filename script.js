@@ -11,6 +11,7 @@ const section1 = document.querySelector("#section--1")
 const tabs = document.querySelectorAll('.operations__tab')
 const tabsContainer = document.querySelector('.operations__tab-container')
 const tabContents = document.querySelectorAll('.operations__content')
+const nav = document.querySelector('.nav')
 
 
 ///////////////////////////////////////
@@ -49,7 +50,7 @@ btnScrollTo.addEventListener('click', function (e) {
   //   behavior: "smooth"
   // })
 
-  section1.scrollIntoView({behavior: "smooth"})
+  section1.scrollIntoView({ behavior: "smooth" })
 })
 
 // document.querySelectorAll(".nav__link").forEach(HTMLElement => {
@@ -64,11 +65,11 @@ document.querySelector(".nav__links").addEventListener("click", function (e) {
   e.preventDefault()
   if (e.target.classList.contains('nav__link')) {
     const href = e.target.getAttribute('href')
-    document.querySelector(href).scrollIntoView({behavior: "smooth"})
+    document.querySelector(href).scrollIntoView({ behavior: "smooth" })
   }
 })
 
-// operations__tab
+// operations__tab on section 3
 
 tabsContainer.addEventListener('click', function (e) {
   const clickedButton = e.target.closest('.operations__tab')
@@ -79,6 +80,40 @@ tabsContainer.addEventListener('click', function (e) {
   clickedButton.classList.add('operations__tab--active')
   // avtive content
   tabContents.forEach(content => content.classList.remove('operations__content--active'))
-  
+
   document.querySelector(`.operations__content--${clickedButton.dataset.tab}`).classList.add('operations__content--active')
+})
+
+// nav link blur on hover
+
+function navLinksHoverAnimations(e) {
+  if (e.target.classList.contains('nav__link')) {
+    const linkOver = e.target
+    const siblingLinks = linkOver.closest('.nav__links').querySelectorAll(".nav__link")
+    const logo = linkOver.closest('.nav').querySelector('img')
+    const logoText = linkOver.closest('.nav').querySelector('.nav__text')
+
+    siblingLinks.forEach(el => {
+      if (el !== linkOver) el.style.opacity = this
+    })
+    logo.style.opacity = this
+    logoText.style.opacity = this
+  }
+}
+
+nav.addEventListener('mouseover', navLinksHoverAnimations.bind(0.4))
+
+nav.addEventListener('mouseout', navLinksHoverAnimations.bind(1))
+
+
+// sticky navigation
+
+const sectionCoords = section1.getBoundingClientRect()
+
+window.addEventListener('scroll', function () {
+  if (this.window.scrollY > sectionCoords.top) {
+    nav.classList.add('sticky')
+  } else {
+    nav.classList.remove('sticky')
+  }
 })
