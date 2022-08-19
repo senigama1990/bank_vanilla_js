@@ -13,6 +13,7 @@ const tabsContainer = document.querySelector('.operations__tab-container')
 const tabContents = document.querySelectorAll('.operations__content')
 const nav = document.querySelector('.nav')
 const header = document.querySelector('.header')
+const allSections = document.querySelectorAll('.section')
 
 
 ///////////////////////////////////////
@@ -143,9 +144,52 @@ function getStickyNav(entries) {
   
 }
 const navHeight = nav.getBoundingClientRect().height
-const observer = new IntersectionObserver(getStickyNav, {
+const headerObserver = new IntersectionObserver(getStickyNav, {
   root: null,
   threshold: 0,
   rootMargin: `-${navHeight}px`
 })
-observer.observe(header)
+headerObserver.observe(header)
+
+//show elements text on scroll
+
+function appearenceObserver(entries, observer) {
+  const entry = entries[0]
+  // console.log(entry);
+  if (!entry.isIntersecting) return
+  entry.target.classList.remove('section--hidden')
+  observer.unobserve(entry.target)
+}
+
+const sectionObserver = new IntersectionObserver(appearenceObserver, {
+  root: null,
+  threshold: 0.20
+})
+
+allSections.forEach(section => {
+  sectionObserver.observe(section)
+  section.classList.add('section--hidden')
+})
+
+//lazy loading images
+
+const lazyimages = document.querySelectorAll('img[data-src]')
+// console.log(lazyimages);
+
+function loadImages(entries, observer) {
+  const entry = entries[0]
+  if (!entry.isIntersecting) return
+  entry.target.src = entry.target.dataset.src
+
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img')
+  })
+  observer.unobserve(entry.target)
+}
+
+const lazyImagesObserver = new IntersectionObserver(loadImages, {
+  root: null,
+  threshold: 0.7
+})
+
+lazyimages.forEach(image => lazyImagesObserver.observe(image))
