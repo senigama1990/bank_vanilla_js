@@ -14,7 +14,9 @@ const tabContents = document.querySelectorAll('.operations__content')
 const nav = document.querySelector('.nav')
 const header = document.querySelector('.header')
 const allSections = document.querySelectorAll('.section')
+const lazyimages = document.querySelectorAll('img[data-src]')
 const dotContainer = document.querySelector('.dots')
+
 
 
 ///////////////////////////////////////
@@ -46,23 +48,9 @@ document.addEventListener('keydown', function (e) {
 
 
 btnScrollTo.addEventListener('click', function (e) {
-  // const section1Coords = section1.getBoundingClientRect();
-  // window.scrollTo({
-  //   left: section1Coords.left + window.pageXOffset,
-  //   top: section1Coords.top + window.pageYOffset,
-  //   behavior: "smooth"
-  // })
-
   section1.scrollIntoView({ behavior: "smooth" })
 })
 
-// document.querySelectorAll(".nav__link").forEach(HTMLElement => {
-//   HTMLElement.addEventListener("click", function (e) {
-//     e.preventDefault()
-//     const href = this.getAttribute('href')
-//     document.querySelector(href).scrollIntoView({behavior: "smooth"})
-//   })
-// })
 
 document.querySelector(".nav__links").addEventListener("click", function (e) {
   e.preventDefault()
@@ -111,29 +99,6 @@ nav.addEventListener('mouseout', navLinksHoverAnimations.bind(1))
 
 // sticky navigation
 
-// const sectionCoords = section1.getBoundingClientRect()
-
-// window.addEventListener('scroll', function () {
-//   if (this.window.scrollY > sectionCoords.top) {
-//     nav.classList.add('sticky')
-//   } else {
-//     nav.classList.remove('sticky')
-//   }
-// })
-
-// sticky navigation intersection observer API
-// const observerCallback = function (entries, observer) {
-//   entries.forEach(entry => {
-//     console.log(entry);
-//   })
-// }
-// const observerOptions = {
-//   root: null,
-//   threshold: [0, 0.2]
-// }
-// const observer = new IntersectionObserver(observerCallback, observerOptions)
-// observer.observe(section1)
-
 function getStickyNav(entries) {
   const entry = entries[0]
   // console.log(entry);
@@ -144,19 +109,21 @@ function getStickyNav(entries) {
   }
 
 }
+
 const navHeight = nav.getBoundingClientRect().height
+
 const headerObserver = new IntersectionObserver(getStickyNav, {
   root: null,
   threshold: 0,
   rootMargin: `-${navHeight}px`
 })
+
 headerObserver.observe(header)
 
 //show elements text on scroll
 
 function appearenceObserver(entries, observer) {
   const entry = entries[0]
-  // console.log(entry);
   if (!entry.isIntersecting) return
   entry.target.classList.remove('section--hidden')
   observer.unobserve(entry.target)
@@ -174,8 +141,6 @@ allSections.forEach(section => {
 
 //lazy loading images
 
-const lazyimages = document.querySelectorAll('img[data-src]')
-// console.log(lazyimages);
 
 function loadImages(entries, observer) {
   const entry = entries[0]
@@ -205,8 +170,6 @@ const btnRight = document.querySelector('.slider__btn--right')
 let currentSlide = 0
 const slidesNumber = slides.length
 
-// slider.style.transform = 'scale(0.4) translateX(1300px)'
-// slider.style.overflow = "visible"
 const createDots = function () {
   slides.forEach(function (_, index) {
     dotContainer.insertAdjacentHTML('beforeend',
