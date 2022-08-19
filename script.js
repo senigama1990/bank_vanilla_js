@@ -12,6 +12,7 @@ const tabs = document.querySelectorAll('.operations__tab')
 const tabsContainer = document.querySelector('.operations__tab-container')
 const tabContents = document.querySelectorAll('.operations__content')
 const nav = document.querySelector('.nav')
+const header = document.querySelector('.header')
 
 
 ///////////////////////////////////////
@@ -108,12 +109,43 @@ nav.addEventListener('mouseout', navLinksHoverAnimations.bind(1))
 
 // sticky navigation
 
-const sectionCoords = section1.getBoundingClientRect()
+// const sectionCoords = section1.getBoundingClientRect()
 
-window.addEventListener('scroll', function () {
-  if (this.window.scrollY > sectionCoords.top) {
+// window.addEventListener('scroll', function () {
+//   if (this.window.scrollY > sectionCoords.top) {
+//     nav.classList.add('sticky')
+//   } else {
+//     nav.classList.remove('sticky')
+//   }
+// })
+
+// sticky navigation intersection observer API
+// const observerCallback = function (entries, observer) {
+//   entries.forEach(entry => {
+//     console.log(entry);
+//   })
+// }
+// const observerOptions = {
+//   root: null,
+//   threshold: [0, 0.2]
+// }
+// const observer = new IntersectionObserver(observerCallback, observerOptions)
+// observer.observe(section1)
+
+function getStickyNav(entries) {
+  const entry = entries[0]
+  // console.log(entry);
+  if (!entry.isIntersecting) {
     nav.classList.add('sticky')
   } else {
     nav.classList.remove('sticky')
   }
+  
+}
+const navHeight = nav.getBoundingClientRect().height
+const observer = new IntersectionObserver(getStickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`
 })
+observer.observe(header)
