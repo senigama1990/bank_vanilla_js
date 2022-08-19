@@ -14,6 +14,7 @@ const tabContents = document.querySelectorAll('.operations__content')
 const nav = document.querySelector('.nav')
 const header = document.querySelector('.header')
 const allSections = document.querySelectorAll('.section')
+const dotContainer = document.querySelector('.dots')
 
 
 ///////////////////////////////////////
@@ -141,7 +142,7 @@ function getStickyNav(entries) {
   } else {
     nav.classList.remove('sticky')
   }
-  
+
 }
 const navHeight = nav.getBoundingClientRect().height
 const headerObserver = new IntersectionObserver(getStickyNav, {
@@ -193,3 +194,81 @@ const lazyImagesObserver = new IntersectionObserver(loadImages, {
 })
 
 lazyimages.forEach(image => lazyImagesObserver.observe(image))
+
+//slider
+
+const slides = document.querySelectorAll('.slide')
+const slider = document.querySelector('.slider')
+const btnLeft = document.querySelector('.slider__btn--left')
+const btnRight = document.querySelector('.slider__btn--right')
+
+let currentSlide = 0
+const slidesNumber = slides.length
+
+// slider.style.transform = 'scale(0.4) translateX(1300px)'
+// slider.style.overflow = "visible"
+const createDots = function () {
+  slides.forEach(function (_, index) {
+    dotContainer.insertAdjacentHTML('beforeend',
+      `
+        <button class = "dots__dot" data-slide = '${index}'></button>
+      `)
+  })
+}
+createDots()
+
+const activateCurrentDot = function (slide) {
+  document.querySelectorAll('.dots__dot').forEach(dot => (
+    dot.classList.remove('dots__dot--active')
+  ))
+  document.querySelector(`.dots__dot[data-slide='${slide}']`).classList.add('dots__dot--active')
+}
+activateCurrentDot(0)
+function moveTiSlide(slide) {
+  slides.forEach((s, index) => s.style.transform = `translateX(${(index - slide) * 100}%)`)
+}
+
+moveTiSlide(0)
+
+function nextSlide() {
+  if (currentSlide === slidesNumber - 1) {
+    currentSlide = 0
+  } else {
+    currentSlide++
+  }
+  moveTiSlide(currentSlide)
+  activateCurrentDot(currentSlide)
+}
+
+function prevSlide() {
+  if (currentSlide === 0) {
+    currentSlide = slidesNumber - 1
+  } else {
+    currentSlide--
+  }
+  moveTiSlide(currentSlide)
+  activateCurrentDot(currentSlide)
+}
+
+btnRight.addEventListener('click', nextSlide)
+
+btnLeft.addEventListener('click', prevSlide)
+
+//slide with arrows
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'ArrowLeft') {
+    prevSlide()
+  } else if (e.key === 'ArrowRight') {
+    nextSlide()
+  }
+})
+
+dotContainer.addEventListener('click', function (e) {
+  if (e.target.classList.contains('dots__dot')) {
+    const slide = e.target.dataset.slide
+    moveTiSlide(slide)
+    activateCurrentDot(slide)
+  }
+})
+
+setInterval(nextSlide, 5000)
